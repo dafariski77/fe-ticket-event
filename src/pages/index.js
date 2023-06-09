@@ -1,20 +1,17 @@
 import Head from "next/head";
-import { HomeNavbar } from "./home";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Navbar } from "@/components/home/Navbar";
 
 export default function Home() {
-  const [token, setToken] = useState();
-
   const router = useRouter();
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
 
-    if(!token) {
-      router.push('/auth/login')
+    if (!token) {
+      router.push("/auth/login");
     }
-
   });
 
   return (
@@ -26,7 +23,9 @@ export default function Home() {
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>{token && <HomeNavbar />}</main>
+      <main>
+        <Navbar />
+      </main>
     </>
   );
 }

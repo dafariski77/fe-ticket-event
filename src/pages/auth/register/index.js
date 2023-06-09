@@ -16,8 +16,11 @@ import { PasswordField } from "@/components/auth/PasswordField";
 import Link from "next/link";
 import { useState } from "react";
 import { Auth } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -33,7 +36,7 @@ export default function RegisterPage() {
     const register = await Auth("/register", form);
 
     if (register?.data.data) {
-      console.log(register);
+      router.push("/auth/login");
     }
   };
 

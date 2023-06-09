@@ -9,13 +9,22 @@ import {
   IconButton,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { FiMenu } from "react-icons/fi";
 
-export const HomeNavbar = () => {
+export const Navbar = () => {
+  const router = useRouter();
+
   const isDesktop = useBreakpointValue({
     base: false,
     lg: true,
   });
+
+  const logout = () => {
+    localStorage.clear("token");
+    router.push("/auth/login");
+  };
+
   return (
     <Box
       as="section"
@@ -45,6 +54,9 @@ export const HomeNavbar = () => {
                 <HStack spacing="3">
                   <Button variant="tertiary">Sign in</Button>
                   <Button variant="primary">Sign up</Button>
+                  <Button variant="primary" onClick={logout}>
+                    Sign up
+                  </Button>
                 </HStack>
               </Flex>
             ) : (

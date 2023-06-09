@@ -16,8 +16,11 @@ import Link from "next/link";
 import { PasswordField } from "@/components/auth/PasswordField";
 import { useState } from "react";
 import { Auth } from "@/utils/auth";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -32,6 +35,7 @@ export default function LoginPage() {
 
     if (login?.data) {
       localStorage.setItem("token", login.data.token);
+      router.push("/");
     }
   };
 
