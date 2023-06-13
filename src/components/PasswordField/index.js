@@ -25,7 +25,7 @@ export const PasswordField = forwardRef((props, ref) => {
   }
   return (
     <FormControl>
-      <FormLabel htmlFor="password">{props.title}</FormLabel>
+      <FormLabel htmlFor={props.name}>{props.title}</FormLabel>
       <InputGroup>
         <InputRightElement>
           <IconButton

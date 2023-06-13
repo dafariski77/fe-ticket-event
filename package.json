@@ -14,13 +14,17 @@
     "@chakra-ui/react": "^2.7.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@tanstack/react-query": "^4.29.12",
     "axios": "^1.4.0",
+    "cookies-next": "^2.1.2",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
+    "formik": "^2.4.1",
     "framer-motion": "^10.12.16",
     "install": "^0.13.0",
     "next": "13.4.4",
     "react": "18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "react-icons": "^4.9.0"
   }

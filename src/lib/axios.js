@@ -1,5 +1,5 @@
-import axios from "axios";
+const { default: axios } = require("axios");
 
-export const axiosAuth = axios.create({
+export const axiosAPI = axios.create({
   baseURL: "https://be-ticket-event-production.up.railway.app/api/auth",
 });
