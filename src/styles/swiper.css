@@ -1,0 +1,13 @@
+.slide {
+  font-size: 1.5rem;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  height: 400px;
+  background-color: #eee;
+  border-radius: 16px;
+}
+
+.swiper-container {
+  height: 268px;
+}

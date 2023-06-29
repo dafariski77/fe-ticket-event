@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { PasswordField } from "@/components/PasswordField";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { AlertTop } from "@/components/Alert";
 import { Navbar } from "@/components/Navbar";
@@ -18,9 +18,12 @@ import TextForm from "@/components/Form";
 import { useAuth } from "@/features/auth/useAuth";
 import { useFormik } from "formik";
 import { setCookie } from "cookies-next";
+import { UserContext } from "@/pages/_app";
 
 export default function LoginPage() {
   const router = useRouter();
+
+  const { setAuthenticatedUser } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues: {
@@ -50,9 +53,9 @@ export default function LoginPage() {
   const { mutate, isLoading } = useAuth({
     url: "/login",
     onSuccess: (data) => {
-      // cookies().set("auth-token", data.data.token, {sec})
-      // localStorage.setItem("token", data.data.token);
       setCookie("auth", data.data.token, { secure: true, path: "/" });
+      setAuthenticatedUser(data.data);
+      console.log(data.data)
       router.push("/");
     },
     onError: (error) => {

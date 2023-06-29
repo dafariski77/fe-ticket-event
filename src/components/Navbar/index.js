@@ -6,26 +6,33 @@ import {
   Container,
   Flex,
   HStack,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Menu,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
+  Spinner,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiAccountCircleLine } from "react-icons/ri";
-import { getCookie, deleteCookie, hasCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import { useAuth } from "@/features/auth/useAuth";
+import { useContext } from "react";
+import { UserContext } from "@/pages/_app";
+import { FiSearch } from "react-icons/fi";
 
 export const Navbar = () => {
   const router = useRouter();
   const toast = useToast();
-  const check = hasCookie("auth", { secure: true, path: "/" });
 
-  const token = getCookie("auth", { secure: true, path: "/" });
-  const bearer = token?.split("|")[1];
+  const { authenticatedUser, setAuthenticatedUser } = useContext(UserContext);
 
   const { mutate } = useAuth({
     url: "/logout",
@@ -37,10 +44,19 @@ export const Navbar = () => {
         isClosable: true,
         status: "success",
       });
+      setAuthenticatedUser(null);
       router.push("/auth/login");
     },
+    onMutate: () => {
+      toast({
+        title: <Spinner />,
+        position: "top",
+        isClosable: true,
+        status: "loading",
+      });
+    },
     headers: {
-      Authorization: `Bearer ${bearer}`,
+      Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },
   });
 
@@ -61,16 +77,33 @@ export const Navbar = () => {
         >
           <HStack spacing="10" justify="space-between">
             <Link href={"/"}>
-              <Logo />
+              <Image src={"/img/logo2.png"} height="40px" alt="logo" />
             </Link>
             <Flex justify="space-between" flex="1">
-              <ButtonGroup variant="text" colorScheme="gray" spacing="8">
-                {["Product", "Pricing", "Resources", "Support"].map((item) => (
-                  <Button key={item}>{item}</Button>
-                ))}
-              </ButtonGroup>
-              <HStack spacing="3">
-                {check ? (
+              <InputGroup width={"lg"}>
+                <InputLeftElement pointerEvents="none">
+                  <FiSearch color="gray.300" />
+                </InputLeftElement>
+                <Input type="tel" placeholder="Search by event name" />
+              </InputGroup>
+              <HStack spacing="6" zIndex={5}>
+                <ButtonGroup
+                  variant="text"
+                  colorScheme="gray"
+                  spacing="8"
+                  alignItems={"center"}
+                >
+                  <Link href={"/#"}>
+                    <Text>Explore</Text>
+                  </Link>
+                  <Link href={"/category"}>
+                    <Text>Tickets</Text>
+                  </Link>
+                  <Link href={"/#"}>
+                    <Text>Transactions</Text>
+                  </Link>
+                </ButtonGroup>
+                {authenticatedUser ? (
                   <Menu>
                     <MenuButton
                       as={Button}
@@ -82,7 +115,9 @@ export const Navbar = () => {
                     <MenuList>
                       <MenuGroup title="Profile">
                         <MenuItem>My Account</MenuItem>
-                        <MenuItem>Payments </MenuItem>
+                        <Link href={"/admin"}>
+                          <MenuItem>Dashboard</MenuItem>
+                        </Link>
                         <MenuItem>Docs</MenuItem>
                         <MenuItem onClick={() => mutate({})} color={"red"}>
                           Logout
@@ -93,10 +128,10 @@ export const Navbar = () => {
                 ) : (
                   <>
                     <Link href={"/auth/login"}>
-                      <Button variant="tertiary">Sign in</Button>
+                      <Button variant="outline">Sign In</Button>
                     </Link>
                     <Link href={"/auth/register"}>
-                      <Button variant="primary">Sign up</Button>
+                      <Button variant="primary">Sign Up</Button>
                     </Link>
                   </>
                 )}

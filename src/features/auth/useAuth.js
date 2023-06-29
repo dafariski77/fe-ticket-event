@@ -1,7 +1,7 @@
 import { axiosAPI } from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 
-export const useAuth = ({ onSuccess, headers, onError, url }) => {
+export const useAuth = ({ onSuccess, headers, onError, url, onMutate }) => {
   return useMutation({
     mutationFn: async (body) => {
       const authResponse = await axiosAPI.post(url, body, {
@@ -12,5 +12,6 @@ export const useAuth = ({ onSuccess, headers, onError, url }) => {
     },
     onSuccess,
     onError,
+    onMutate,
   });
 };

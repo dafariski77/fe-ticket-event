@@ -1,6 +1,23 @@
 import Head from "next/head";
 import { Navbar } from "@/components/Navbar";
-import { Box, Button, Container, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardFooter,
+  Container,
+  Divider,
+  Heading,
+  Image,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import CarouselSwipe from "@/components/Carousel";
+import PostCard from "@/components/Card";
+import EventList from "@/components/Events";
+import { FooterSection } from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -17,59 +34,21 @@ export default function Home() {
         <Box as="section" bg="bg.surface">
           <Container
             py={{
-              base: "16",
-              md: "24",
+              base: "12",
+              md: "18",
             }}
           >
-            <Stack
-              spacing={{
-                base: "8",
-                md: "10",
-              }}
-            >
-              <Stack
-                spacing={{
-                  base: "4",
-                  md: "5",
-                }}
-                align="center"
-              >
-                <Heading
-                  size={{
-                    base: "sm",
-                    md: "md",
-                  }}
-                >
-                  Ready to Grow?
-                </Heading>
-                <Text
-                  color="fg.muted"
-                  maxW="2xl"
-                  textAlign="center"
-                  fontSize="xl"
-                >
-                  With this beautiful and responsive React components you will
-                  realize your next project in no time.
-                </Text>
-              </Stack>
-              <Stack
-                spacing="3"
-                direction={{
-                  base: "column",
-                  sm: "row",
-                }}
-                justify="center"
-              >
-                <Button variant="secondary" size="xl">
-                  Learn more
-                </Button>
-                <Button variant="primary" size="xl">
-                  Start Free Trial
-                </Button>
-              </Stack>
-            </Stack>
+            <CarouselSwipe />
+            <Box my={12}>
+              <Heading size="sm" as={"h4"} fontWeight={"bold"}>
+                Upcoming Events
+              </Heading>
+              <Text>Find your favorite events, and let&lsquo;s have fun</Text>
+              <EventList pt={8} />
+            </Box>
           </Container>
         </Box>
+        <FooterSection />
       </main>
     </>
   );

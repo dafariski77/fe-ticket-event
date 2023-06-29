@@ -1,5 +1,9 @@
 const { default: axios } = require("axios");
 
 export const axiosAPI = axios.create({
-  baseURL: "https://be-ticket-event-production.up.railway.app/api/auth",
+  baseURL: "http://localhost:8000/api/auth",
+});
+
+export const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/",
 });
