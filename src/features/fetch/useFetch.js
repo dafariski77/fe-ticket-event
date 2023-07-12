@@ -1,7 +1,14 @@
 import { axiosInstance } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetch = ({ headers, onError, url, queryKey, onSuccess }) => {
+export const useFetch = ({
+  headers,
+  onError,
+  url,
+  queryKey,
+  onSuccess,
+  cacheTime,
+}) => {
   return useQuery({
     queryFn: async () => {
       const authResponse = await axiosInstance.get(url, { headers });
@@ -10,7 +17,8 @@ export const useFetch = ({ headers, onError, url, queryKey, onSuccess }) => {
     },
     queryKey,
     onError,
-    onSuccess
+    onSuccess,
+    cacheTime,
   });
 };
 

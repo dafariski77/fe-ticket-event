@@ -47,14 +47,6 @@ export const Navbar = () => {
       setAuthenticatedUser(null);
       router.push("/auth/login");
     },
-    onMutate: () => {
-      toast({
-        title: <Spinner />,
-        position: "top",
-        isClosable: true,
-        status: "loading",
-      });
-    },
     headers: {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },

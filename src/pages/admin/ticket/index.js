@@ -92,7 +92,7 @@ export default function EventAdmin() {
         <Card>
           <CardBody>
             <Link href={"/admin/ticket/create"}>
-              <Button>Add Category</Button>
+              <Button>Add Ticket</Button>
             </Link>
             <FormControl>
               <Select

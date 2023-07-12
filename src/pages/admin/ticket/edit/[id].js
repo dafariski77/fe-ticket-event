@@ -9,7 +9,6 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
 import { getCookie } from "cookies-next";
 import AdminNavbar from "@/components/Admin/Navbar";
 import Link from "next/link";
@@ -20,20 +19,18 @@ import { useFetch } from "@/features/fetch/useFetch";
 export default function CreateTicket() {
   const router = useRouter();
 
-  const id = router.query.id;
-
   const { data: dataTicket } = useFetch({
-    url: `cms/ticket/${id}`,
+    url: `cms/ticket/${router.query.id}`,
     headers: {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },
+    queryKey: [`ticket/${router.query.id}`],
+    onSuccess: () => {
+      formik.setFieldValue("name", dataTicket?.data.data.name);
+      formik.setFieldValue("price", dataTicket?.data.data.price);
+      formik.setFieldValue("event_id", dataTicket?.data.data.event_id);
+    },
   });
-
-  useEffect(() => {
-    formik.setFieldValue("name", dataTicket?.data.data.name);
-    formik.setFieldValue("price", dataTicket?.data.data.price);
-    formik.setFieldValue("event_id", dataTicket?.data.data.event_id);
-  }, [dataTicket]);
 
   const formik = useFormik({
     initialValues: {

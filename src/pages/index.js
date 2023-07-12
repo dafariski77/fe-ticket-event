@@ -2,16 +2,8 @@ import Head from "next/head";
 import { Navbar } from "@/components/Navbar";
 import {
   Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
   Container,
-  Divider,
   Heading,
-  Image,
-  Stack,
   Text,
 } from "@chakra-ui/react";
 import CarouselSwipe from "@/components/Carousel";

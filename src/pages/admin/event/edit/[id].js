@@ -10,7 +10,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { useEffect } from "react";
 import { getCookie } from "cookies-next";
 import AdminNavbar from "@/components/Admin/Navbar";
 import Link from "next/link";
@@ -21,23 +20,21 @@ import { useFetch } from "@/features/fetch/useFetch";
 export default function CreateCategory() {
   const router = useRouter();
 
-  const id = router.query.id;
-
   const { data: dataEvent } = useFetch({
-    url: `cms/event/${id}`,
+    url: `cms/event/${router.query.id}`,
     headers: {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },
+    onSuccess: () => {
+      formik.setFieldValue("name", dataEvent?.data?.data?.name);
+      formik.setFieldValue("date", dataEvent?.data?.data?.date);
+      formik.setFieldValue("about", dataEvent?.data?.data?.about);
+      formik.setFieldValue("category_id", dataEvent?.data?.data?.category_id);
+      formik.setFieldValue("venue", dataEvent?.data?.data?.name);
+      formik.setFieldValue("status", dataEvent?.data?.data?.status);
+    },
+    queryKey: [`event/${router.query.id}`],
   });
-
-  useEffect(() => {
-    formik.setFieldValue("name", dataEvent?.data.data.name);
-    formik.setFieldValue("date", dataEvent?.data.data.date);
-    formik.setFieldValue("about", dataEvent?.data.data.about);
-    formik.setFieldValue("category_id", dataEvent?.data.data.category_id);
-    formik.setFieldValue("venue", dataEvent?.data.data.name);
-    formik.setFieldValue("status", dataEvent?.data.data.status);
-  }, [dataEvent]);
 
   const formik = useFormik({
     initialValues: {

@@ -84,7 +84,7 @@ export default function CreateTicket() {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Event Category</FormLabel>
+                <FormLabel>Event Name</FormLabel>
                 <Select
                   as={"select"}
                   name="event_id"

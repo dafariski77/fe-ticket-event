@@ -22,7 +22,7 @@ export const FooterSection = () => (
         </ButtonGroup>
       </Stack>
       <Text fontSize="sm" color="fg.subtle">
-        &copy; {new Date().getFullYear()} Chakra UI Pro, Inc. All rights reserved.
+        &copy; {new Date().getFullYear()} Connect Tickets, Inc. All rights reserved.
       </Text>
     </Stack>
   </Container>

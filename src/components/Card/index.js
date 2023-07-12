@@ -14,6 +14,7 @@ const PostCard = ({ dataProps }) => {
             objectFit={"cover"}
             height={140}
             w={"100%"}
+            loading="lazy"
           />
           <Stack mt="6" spacing="3">
             <Text
@@ -24,7 +25,7 @@ const PostCard = ({ dataProps }) => {
             >
               {item.date}
             </Text>
-            <Link href="/">
+            <Link href={`/event/${item.id}`}>
               <Heading fontWeight={"normal"} fontSize="lg" lineHeight="none">
                 {item.name}
               </Heading>
@@ -34,7 +35,9 @@ const PostCard = ({ dataProps }) => {
               {item.venue}
             </Text>
             <Text fontWeight={"bold"} lineHeight={"none"} pb={4}>
-              Rp {item?.ticket_category[0]?.price}
+              {item?.ticket_category[0]?.price == 0
+                ? "FREE"
+                : `Rp ${item?.ticket_category[0]?.price}`}
             </Text>
           </Stack>
         </CardBody>

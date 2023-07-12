@@ -53,17 +53,20 @@ export default function EventAdmin() {
           <Td>{item.venue}</Td>
           <Td>{item.status}</Td>
           <Td>
-            <Image
-              unoptimized
-              src={`http://localhost:8000/storage/${item.image}`}
-              width={50}
-              height={50}
-              alt={item.name}
-            />
+            {item?.image && (
+              <Image
+                unoptimized
+                src={`http://localhost:8000/storage/${item?.image}`}
+                width={50}
+                height={50}
+                alt={item.name}
+                loading="lazy"
+              />
+            )}
           </Td>
           <Td>
             <ButtonGroup>
-              <Link href={`/admin/event/edit/${item.id}`} >
+              <Link href={`/admin/event/edit/${item.id}`}>
                 <Button colorScheme="green" variant={"solid"}>
                   Edit
                 </Button>
@@ -89,7 +92,7 @@ export default function EventAdmin() {
         <Card>
           <CardBody>
             <Link href={"/admin/event/create"}>
-              <Button>Add Category</Button>
+              <Button>Add Event</Button>
             </Link>
             <TableContainer pt={3}>
               <Table variant="simple">
