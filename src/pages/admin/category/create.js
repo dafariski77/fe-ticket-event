@@ -56,6 +56,7 @@ export default function CreateCategory() {
                   onChange={(e) =>
                     formik.setFieldValue(e.target.name, e.target.value)
                   }
+                  my={4}
                 />
               </FormControl>
               <Link href={"/admin/category/"}>

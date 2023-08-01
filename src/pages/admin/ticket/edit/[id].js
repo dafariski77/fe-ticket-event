@@ -69,7 +69,7 @@ export default function CreateTicket() {
         <Card>
           <CardBody>
             <form onSubmit={formik.handleSubmit}>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Ticket Name</FormLabel>
                 <Input
                   placeholder="Name"
@@ -81,8 +81,8 @@ export default function CreateTicket() {
                   }
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel>Ticket Name</FormLabel>
+              <FormControl mb={4}>
+                <FormLabel>Ticket Price</FormLabel>
                 <Input
                   placeholder="Price"
                   name="price"
@@ -93,7 +93,7 @@ export default function CreateTicket() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Category</FormLabel>
                 <Select
                   as={"select"}

@@ -7,6 +7,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Spinner,
   Textarea,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -20,7 +21,7 @@ import { useFetch } from "@/features/fetch/useFetch";
 export default function CreateCategory() {
   const router = useRouter();
 
-  const { data: dataEvent } = useFetch({
+  const { data: dataEvent, isLoading: loadingFetch } = useFetch({
     url: `cms/event/${router.query.id}`,
     headers: {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
@@ -60,7 +61,7 @@ export default function CreateCategory() {
       formData.append("status", status);
       formData.append("image", image);
 
-      mutate({ body: formData, id });
+      mutate({ body: formData, id: router.query.id });
     },
   });
 
@@ -69,7 +70,7 @@ export default function CreateCategory() {
     headers: {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },
-    queryKey: ["events"],
+    queryKey: ["category/event/fetch"],
   });
 
   const { mutate, isLoading } = usePut({
@@ -87,110 +88,121 @@ export default function CreateCategory() {
       <Container>
         <Card>
           <CardBody>
-            <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-              <FormControl>
-                <FormLabel>Event Name</FormLabel>
-                <Input
-                  placeholder="Name"
-                  name="name"
-                  type="text"
-                  defaultValue={formik.values.name}
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Date</FormLabel>
-                <Input
-                  value={formik.values.date}
-                  placeholder="Date"
-                  name="date"
-                  type="date"
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Banner</FormLabel>
-                <Input
-                  pt={1}
-                  placeholder="Image"
-                  name="image"
-                  type="file"
-                  value={formik.values.image}
-                  accept="image/"
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.files[0])
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Description</FormLabel>
-                <Textarea
-                  placeholder="Description"
-                  name="about"
-                  value={formik.values.about}
-                  type="text"
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Category</FormLabel>
-                <Select
-                  as={"select"}
-                  placeholder="Select Category"
-                  value={formik.values.category_id}
-                  name="category_id"
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
+            {loadingFetch ? (
+              <Spinner />
+            ) : (
+              <form
+                onSubmit={formik.handleSubmit}
+                encType="multipart/form-data"
+              >
+                <FormControl mb={4}>
+                  <FormLabel>Event Name</FormLabel>
+                  <Input
+                    placeholder="Name"
+                    name="name"
+                    type="text"
+                    defaultValue={formik.values.name}
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Date</FormLabel>
+                  <Input
+                    value={formik.values.date}
+                    placeholder="Date"
+                    name="date"
+                    type="date"
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Banner</FormLabel>
+                  <Input
+                    pt={1}
+                    placeholder="Image"
+                    name="image"
+                    type="file"
+                    value={formik.values.image}
+                    accept="image/"
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.files[0])
+                    }
+                  />
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Description</FormLabel>
+                  <Textarea
+                    placeholder="Description"
+                    name="about"
+                    value={formik.values.about}
+                    type="text"
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Category</FormLabel>
+                  <Select
+                    as={"select"}
+                    placeholder="Select Category"
+                    value={formik.values.category_id}
+                    name="category_id"
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  >
+                    {data?.data?.data?.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Venue</FormLabel>
+                  <Input
+                    placeholder="Venue"
+                    name="venue"
+                    value={formik.values.venue}
+                    type="text"
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl mb={4}>
+                  <FormLabel>Event Status</FormLabel>
+                  <Select
+                    as={"select"}
+                    name="status"
+                    value={formik.values.status}
+                    onChange={(e) =>
+                      formik.setFieldValue(e.target.name, e.target.value)
+                    }
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Published">Publish</option>
+                  </Select>
+                </FormControl>
+                <Link href={"/admin/event/"}>
+                  <Button variant={"ghost"} mr={3}>
+                    Cancel
+                  </Button>
+                </Link>
+                <Button
+                  isLoading={isLoading}
+                  type="submit"
+                  disabled={isLoading}
                 >
-                  {data?.data?.data?.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Venue</FormLabel>
-                <Input
-                  placeholder="Venue"
-                  name="venue"
-                  value={formik.values.venue}
-                  type="text"
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Event Status</FormLabel>
-                <Select
-                  as={"select"}
-                  name="status"
-                  value={formik.values.status}
-                  onChange={(e) =>
-                    formik.setFieldValue(e.target.name, e.target.value)
-                  }
-                >
-                  <option value="Draft">Draft</option>
-                  <option value="Publish">Publish</option>
-                </Select>
-              </FormControl>
-              <Link href={"/admin/event/"}>
-                <Button variant={"ghost"} mr={3}>
-                  Cancel
+                  Save
                 </Button>
-              </Link>
-              <Button isLoading={isLoading} type="submit" disabled={isLoading}>
-                Save
-              </Button>
-            </form>
+              </form>
+            )}
           </CardBody>
         </Card>
       </Container>

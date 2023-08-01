@@ -72,7 +72,7 @@ export default function CreateEvent() {
         <Card>
           <CardBody>
             <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Name</FormLabel>
                 <Input
                   placeholder="Name"
@@ -83,7 +83,7 @@ export default function CreateEvent() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Date</FormLabel>
                 <Input
                   placeholder="Date"
@@ -94,7 +94,7 @@ export default function CreateEvent() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Banner</FormLabel>
                 <Input
                   pt={1}
@@ -107,7 +107,7 @@ export default function CreateEvent() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Description</FormLabel>
                 <Textarea
                   placeholder="Description"
@@ -118,7 +118,7 @@ export default function CreateEvent() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Category</FormLabel>
                 <Select
                   as={"select"}
@@ -135,7 +135,7 @@ export default function CreateEvent() {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Venue</FormLabel>
                 <Input
                   placeholder="Venue"
@@ -146,7 +146,7 @@ export default function CreateEvent() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Status</FormLabel>
                 <Select
                   as={"select"}
@@ -157,7 +157,7 @@ export default function CreateEvent() {
                   }
                 >
                   <option value="Draft">Draft</option>
-                  <option value="Publish">Publish</option>
+                  <option value="Published">Publish</option>
                 </Select>
               </FormControl>
               <Link href={"/admin/event/"}>

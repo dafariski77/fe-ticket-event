@@ -4,6 +4,7 @@ import "swiper/swiper-bundle.min.css";
 
 import { useState } from "react";
 import SwiperCore, { Autoplay, Pagination } from "swiper";
+import Image from "next/image";
 
 SwiperCore.use([Pagination]);
 
@@ -27,16 +28,40 @@ const SampleComponent = () => {
         }}
       >
         <SwiperSlide>
-          <div className="slide">Slide 1</div>
+          <Image
+            src={"/img/persaja.jpg"}
+            alt="event 1"
+            height={400}
+            width={800}
+            className="slide"
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="slide">Slide 2</div>
+          <Image
+            src={"/img/swara.jpg"}
+            alt="event 1"
+            height={400}
+            width={800}
+            className="slide"
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="slide">Slide 3</div>
+          <Image
+            src={"/img/inquisitiv.png"}
+            alt="event 1"
+            height={400}
+            width={800}
+            className="slide"
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="slide">Slide 4</div>
+          <Image
+            src={"/img/summer music.jpg"}
+            alt="event 1"
+            height={400}
+            width={800}
+            className="slide"
+          />
         </SwiperSlide>
       </Swiper>
     </div>

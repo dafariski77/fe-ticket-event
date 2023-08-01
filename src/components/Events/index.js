@@ -12,9 +12,6 @@ export default function EventList(props) {
   return (
     <SimpleGrid spacing="40px" columns={[2, null, 4]} {...props}>
       {isLoading ? <Spinner /> : <PostCard dataProps={data} />}
-      {isLoading ? <Spinner /> : <PostCard dataProps={data} />}
-      {isLoading ? <Spinner /> : <PostCard dataProps={data} />}
-      {isLoading ? <Spinner /> : <PostCard dataProps={data} />}
     </SimpleGrid>
   );
 }

@@ -21,35 +21,45 @@ import {
 } from "@chakra-ui/react";
 import {
   FiHome,
-  FiTrendingUp,
   FiCompass,
-  FiStar,
-  FiSettings,
   FiMenu,
   FiChevronDown,
+  FiTag,
+  FiArrowLeft,
 } from "react-icons/fi";
 import Link from "next/link";
 import { UserContext } from "@/pages/_app";
-import { useRouter } from "next/router";
+import { FaTicketAlt } from "react-icons/fa";
+import { getCookie } from "cookies-next";
+import { useFetch } from "@/features/fetch/useFetch";
 
 const LinkItems = [
-  { name: "Home", icon: FiHome, href: "/admin" },
-  { name: "Category", icon: FiTrendingUp, href: "/admin/category" },
+  { name: "Dashboard", icon: FiHome, href: "/admin" },
+  { name: "Category", icon: FiTag, href: "/admin/category" },
   { name: "Events", icon: FiCompass, href: "/admin/event" },
-  { name: "Ticket", icon: FiStar, href: "/admin/ticket" },
-  { name: "Settings", icon: FiSettings, href: "/" },
+  { name: "Ticket", icon: FaTicketAlt, href: "/admin/ticket" },
+  { name: "Back To Home", icon: FiArrowLeft, href: "/" },
 ];
 
 export default function AdminNavbar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const router = useRouter();
+  const { authenticatedUser, setAuthenticatedUser } = useContext(UserContext);
 
-  const { authenticatedUser } = useContext(UserContext);
+  const { data: dataUser, refetch } = useFetch({
+    url: "user",
+    headers: {
+      Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
+    },
+    queryKey: ["user"],
+  });
 
   useEffect(() => {
-    
-  })
+    if (getCookie) {
+      refetch();
+      setAuthenticatedUser(dataUser);
+    }
+  }, []);
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -93,7 +103,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          ConnectTicket
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>

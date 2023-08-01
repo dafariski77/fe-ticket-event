@@ -4,7 +4,8 @@
   margin: 0;
   text-align: center;
   height: 400px;
-  background-color: #eee;
+  width: 100%;
+  position: relative;
   border-radius: 16px;
 }
 

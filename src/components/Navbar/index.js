@@ -1,4 +1,3 @@
-import { Logo } from "@/components/Logo";
 import {
   Box,
   Button,
@@ -7,15 +6,11 @@ import {
   Flex,
   HStack,
   Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Menu,
   MenuButton,
   MenuGroup,
   MenuItem,
   MenuList,
-  Spinner,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -26,7 +21,7 @@ import { getCookie, deleteCookie } from "cookies-next";
 import { useAuth } from "@/features/auth/useAuth";
 import { useContext } from "react";
 import { UserContext } from "@/pages/_app";
-import { FiSearch } from "react-icons/fi";
+import SearchInput from "./SearchInput";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -72,12 +67,7 @@ export const Navbar = () => {
               <Image src={"/img/logo2.png"} height="40px" alt="logo" />
             </Link>
             <Flex justify="space-between" flex="1">
-              <InputGroup width={"lg"}>
-                <InputLeftElement pointerEvents="none">
-                  <FiSearch color="gray.300" />
-                </InputLeftElement>
-                <Input type="tel" placeholder="Search by event name" />
-              </InputGroup>
+              <SearchInput />
               <HStack spacing="6" zIndex={5}>
                 <ButtonGroup
                   variant="text"
@@ -85,13 +75,10 @@ export const Navbar = () => {
                   spacing="8"
                   alignItems={"center"}
                 >
-                  <Link href={"/#"}>
+                  <Link href={"/event"}>
                     <Text>Explore</Text>
                   </Link>
-                  <Link href={"/category"}>
-                    <Text>Tickets</Text>
-                  </Link>
-                  <Link href={"/#"}>
+                  <Link href={"/transaction"}>
                     <Text>Transactions</Text>
                   </Link>
                 </ButtonGroup>
@@ -110,7 +97,6 @@ export const Navbar = () => {
                         <Link href={"/admin"}>
                           <MenuItem>Dashboard</MenuItem>
                         </Link>
-                        <MenuItem>Docs</MenuItem>
                         <MenuItem onClick={() => mutate({})} color={"red"}>
                           Logout
                         </MenuItem>

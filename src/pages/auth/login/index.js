@@ -55,7 +55,6 @@ export default function LoginPage() {
     onSuccess: (data) => {
       setCookie("auth", data.data.token, { secure: true, path: "/" });
       setAuthenticatedUser(data.data);
-      console.log(data.data)
       router.push("/");
     },
     onError: (error) => {

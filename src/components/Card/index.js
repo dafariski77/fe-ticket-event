@@ -35,7 +35,8 @@ const PostCard = ({ dataProps }) => {
               {item.venue}
             </Text>
             <Text fontWeight={"bold"} lineHeight={"none"} pb={4}>
-              {item?.ticket_category[0]?.price == 0
+              {item?.ticket_category[0]?.price == 0 ||
+              item.ticket_category.length <= 0
                 ? "FREE"
                 : `Rp ${item?.ticket_category[0]?.price}`}
             </Text>

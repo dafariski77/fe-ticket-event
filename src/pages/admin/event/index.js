@@ -29,6 +29,7 @@ export default function EventAdmin() {
       Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
     },
     queryKey: ["events"],
+    cacheTime: 0
   });
 
   const { mutate: deleteData, isLoading: deleteLoading } = useDelete({
@@ -48,7 +49,7 @@ export default function EventAdmin() {
           <Td>{++i}</Td>
           <Td>{item.name}</Td>
           <Td>{item.date}</Td>
-          <Td>{item.about}</Td>
+          <Td maxW={'40'} isTruncated>{item.about}</Td>
           <Td>{item.category?.name}</Td>
           <Td>{item.venue}</Td>
           <Td>{item.status}</Td>

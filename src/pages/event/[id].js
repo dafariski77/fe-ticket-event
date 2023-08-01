@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { useFetch } from "@/features/fetch/useFetch";
+import { useStore } from "@/features/post/useStore";
 import {
   Box,
   Button,
@@ -7,6 +8,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  CloseButton,
   Container,
   Divider,
   Grid,
@@ -16,6 +18,7 @@ import {
   Icon,
   Image,
   Input,
+  Spinner,
   Stack,
   Tab,
   TabIndicator,
@@ -24,24 +27,31 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useNumberInput,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { FaCalendarAlt, FaTags } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
+import { getCookie } from "cookies-next";
 
 export default function DetailEvent() {
   const router = useRouter();
 
   const [cart, setCart] = useState([]);
-  const [visible, setVisible] = useState(true);
-  const [count, setCount] = useState(1);
+  const [visible, setVisible] = useState([]);
 
-  const { data } = useFetch({
+  const calculateTotalPrice = () => {
+    let total = 0;
+    Object.values(cart).forEach((item) => {
+      total += item.price * item.amount;
+    });
+    return total;
+  };
+
+  const { data, isLoading, isSuccess } = useFetch({
     url: `event/${router.query.id}`,
-    cacheTime: 0,
     queryKey: [`event/detail/${router.query.id}`],
+    enabled: Boolean(router.query.id),
   });
 
   const { data: dataTicket } = useFetch({
@@ -49,72 +59,95 @@ export default function DetailEvent() {
     queryKey: ["tickets", router.query.id],
   });
 
-  const addItem = (item) => {
-    const newItem = {
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      amount: 1,
+  const { mutate, isLoading: loadingCheckout } = useStore({
+    url: "user/order",
+    headers: {
+      Authorization: `Bearer ${getCookie("auth", { secure: true, path: "/" })}`,
+    },
+    onSuccess: () => {
+      router.push("/transaction");
+    },
+  });
+
+  const handleAmount = (item, value) => {
+    setCart((prevCart) => ({
+      ...prevCart,
+      [item.id]: {
+        ticket_id: item.id,
+        event_id: item.event_id,
+        price: item.price,
+        amount: Number(value),
+      },
+    }));
+    calculateTotalPrice();
+  };
+
+  const handleButton = (item) => {
+    setVisible((prevVisible) => ({
+      ...prevVisible,
+      [item.id]: true,
+    }));
+    handleAmount(item, 1);
+  };
+
+  const handleSubmit = () => {
+    const detail = Object.entries(cart).map(([key, value]) => ({
+      ...value,
+    }));
+
+    if (!getCookie("auth", { secure: true, path: "/" })) {
+      router.push("/auth/login");
+    } else {
+      mutate({
+        total: calculateTotalPrice(),
+        detail,
+      });
+    }
+  };
+
+  const deleteOnCart = (item) => {
+    const updatedData = { ...visible, [item.id]: false };
+
+    const foundItem = {
+      ...cart,
+      [item.id]: {
+        amount: 0,
+      },
     };
 
-    setCount(1);
-    setVisible(false);
-    setCart([...cart, newItem]);
+    const updatedCart = Object.fromEntries(
+      Object.entries(foundItem).filter(([itemId, data]) => data.amount != 0)
+    );
+
+    setCart(updatedCart);
+    setVisible(updatedData);
   };
-
-  const handleAmount = (value, itemId) => {
-    const foundItem = cart.find((item) => item.id == itemId);
-    if (foundItem) {
-      foundItem.amount = Number(value);
-      const filteredItems = cart.filter((item) => item.amount !== 0);
-      setCart(filteredItems);
-    } else {
-      console.log("Item not found");
-    }
-  };
-
-  const handleInput = (value) => {
-    if (value < 1) {
-      setCount(0);
-      setVisible(true);
-    }
-
-    setCount(value);
-    handleAmount(value, 1);
-  };
-
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      defaultValue: count,
-      step: 1,
-      min: 0,
-      max: 20,
-      onChange: handleInput,
-    });
-
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
 
   const renderTicket = () => {
     return dataTicket?.data?.data?.map((item) => {
       return (
-        <>
-          <HStack key={item.id} justifyContent={"space-between"}>
+        <HStack key={item.id} justifyContent={"space-between"}>
+          <Stack spacing={0}>
             <Text>{item.name}</Text>
-            {visible ? (
-              <Button variant={"outline"} onClick={() => addItem(item)}>
-                Add
-              </Button>
-            ) : (
-              <HStack maxW="320px">
-                <Button {...dec}>-</Button>
-                <Input {...input} width={12} textAlign={"center"} />
-                <Button {...inc}>+</Button>
-              </HStack>
-            )}
-          </HStack>
-        </>
+            <Text fontWeight={"bold"}>Rp {item.price}</Text>
+          </Stack>
+          {!visible[item.id] ? (
+            <Button variant={"outline"} onClick={() => handleButton(item)}>
+              Add
+            </Button>
+          ) : (
+            <HStack>
+              <Input
+                width={"20"}
+                key={item.id}
+                type="text"
+                value={cart[item.id]?.amount || ""}
+                onChange={(event) => handleAmount(item, event.target.value)}
+              />
+              <CloseButton onClick={() => deleteOnCart(item)} />
+            </HStack>
+          )}
+        </HStack>
       );
     });
   };
@@ -131,16 +164,20 @@ export default function DetailEvent() {
         >
           <Grid h="400px" templateColumns="repeat(7, 1fr)" gap={8}>
             <GridItem colSpan={5}>
-              <Image
-                src={`http://localhost:8000/storage/${data?.data?.data?.image}`}
-                alt={data?.data.data.name}
-                borderRadius="8px"
-                objectFit={"cover"}
-                height={400}
-                w={"100%"}
-                loading="lazy"
-              />
-              <Tabs position="relative" variant="unstyled" mt={8}>
+              {isLoading && <Spinner />}
+              {isSuccess && (
+                <Image
+                  src={`http://localhost:8000/storage/${data?.data?.data?.image}`}
+                  alt={data?.data.data.name}
+                  borderRadius="8px"
+                  objectFit={"cover"}
+                  height={400}
+                  w={"100%"}
+                  loading="lazy"
+                />
+              )}
+
+              <Tabs position="relative" variant="unstyled" my={8}>
                 <TabList>
                   <Tab fontWeight={"bold"}>Description</Tab>
                 </TabList>
@@ -152,7 +189,13 @@ export default function DetailEvent() {
                 />
                 <TabPanels>
                   <TabPanel>
-                    <p>{data?.data.data.about}</p>
+                    <Text
+                      as="pre"
+                      whiteSpace={"pre-wrap"}
+                      fontFamily={"inherit"}
+                    >
+                      {data?.data.data.about}
+                    </Text>
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -169,7 +212,7 @@ export default function DetailEvent() {
                   <Stack>
                     <HStack>
                       <Icon as={FaTags} />
-                      <Text>{data?.data.data.category_id}</Text>
+                      <Text>{data?.data.data.category?.name}</Text>
                     </HStack>
                     <HStack>
                       <Icon as={FaCalendarAlt} />
@@ -189,7 +232,7 @@ export default function DetailEvent() {
                   </Heading>
                   <Divider />
                 </CardHeader>
-                <CardBody pt={2}>
+                <CardBody pt={2} maxHeight={"140"} overflow={"auto"}>
                   <Stack spacing={8}>{renderTicket()}</Stack>
                 </CardBody>
                 <CardFooter>
@@ -197,11 +240,20 @@ export default function DetailEvent() {
                     <Divider />
                     <HStack justifyContent={"space-between"}>
                       <Text>Sub total : </Text>
-                      <Text fontWeight={"bold"} fontSize={"xl"}>
-                        Rp 90.000
+                      <Text
+                        fontWeight={"bold"}
+                        fontSize={"xl"}
+                        color="blue.500"
+                      >
+                        Rp {calculateTotalPrice()}
                       </Text>
                     </HStack>
-                    <Button onClick={() => console.log(cart)}>Checkout</Button>
+                    <Button
+                      onClick={() => handleSubmit()}
+                      isLoading={loadingCheckout}
+                    >
+                      Checkout
+                    </Button>
                   </Stack>
                 </CardFooter>
               </Card>

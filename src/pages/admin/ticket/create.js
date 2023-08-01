@@ -24,15 +24,15 @@ export default function CreateTicket() {
     initialValues: {
       name: "",
       price: 0,
-      event_id: 1,
+      event_id: 0,
     },
     onSubmit: () => {
       const { name, price, event_id } = formik.values;
 
       mutate({
         name,
-        price,
-        event_id,
+        price: Number(price),
+        event_id: Number(event_id),
       });
     },
   });
@@ -61,7 +61,7 @@ export default function CreateTicket() {
         <Card>
           <CardBody>
             <form onSubmit={formik.handleSubmit}>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Ticket Name</FormLabel>
                 <Input
                   placeholder="Name"
@@ -72,8 +72,8 @@ export default function CreateTicket() {
                   }
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel>Ticket Name</FormLabel>
+              <FormControl mb={4}>
+                <FormLabel>Ticket Price</FormLabel>
                 <Input
                   placeholder="Price"
                   name="price"
@@ -83,11 +83,12 @@ export default function CreateTicket() {
                   }
                 />
               </FormControl>
-              <FormControl>
+              <FormControl mb={4}>
                 <FormLabel>Event Name</FormLabel>
                 <Select
                   as={"select"}
                   name="event_id"
+                  placeholder="Select Event"
                   onChange={(e) =>
                     formik.setFieldValue(e.target.name, e.target.value)
                   }

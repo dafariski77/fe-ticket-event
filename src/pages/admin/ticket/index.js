@@ -6,6 +6,7 @@ import {
   Card,
   CardBody,
   Container,
+  Flex,
   FormControl,
   Select,
   Spinner,
@@ -27,7 +28,7 @@ import { useFormik } from "formik";
 export default function EventAdmin() {
   const formik = useFormik({
     initialValues: {
-      id: 1,
+      id: 0,
     },
   });
 
@@ -91,24 +92,28 @@ export default function EventAdmin() {
       <Container>
         <Card>
           <CardBody>
-            <Link href={"/admin/ticket/create"}>
-              <Button>Add Ticket</Button>
-            </Link>
-            <FormControl>
-              <Select
-                as={"select"}
-                name="id"
-                onChange={(e) =>
-                  formik.setFieldValue(e.target.name, e.target.value)
-                }
-              >
-                {dataEvent?.data?.data?.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+            <Flex justifyContent={"left"}>
+              <Link href={"/admin/ticket/create"}>
+                <Button>Add Ticket</Button>
+              </Link>
+              <FormControl>
+                <Select
+                  as={"select"}
+                  name="id"
+                  placeholder="Select Event"
+                  onChange={(e) =>
+                    formik.setFieldValue(e.target.name, e.target.value)
+                  }
+                  ps={4}
+                >
+                  {dataEvent?.data?.data?.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </Flex>
             <TableContainer pt={3}>
               <Table variant="simple">
                 <Thead>
@@ -128,7 +133,7 @@ export default function EventAdmin() {
                     </Tr>
                   ) : !data?.data?.data ? (
                     <Tr>
-                      <Td colSpan={3} textAlign="center">
+                      <Td colSpan={4} textAlign="center">
                         <Text>Kosong</Text>
                       </Td>
                     </Tr>

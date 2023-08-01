@@ -8,6 +8,7 @@ export const useFetch = ({
   queryKey,
   onSuccess,
   cacheTime,
+  enabled
 }) => {
   return useQuery({
     queryFn: async () => {
@@ -19,6 +20,7 @@ export const useFetch = ({
     onError,
     onSuccess,
     cacheTime,
+    enabled
   });
 };
 

@@ -1,11 +1,19 @@
 import AdminNavbar from '@/components/Admin/Navbar'
-import { Text } from '@chakra-ui/react'
+import { Card, CardBody, Container, Divider, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
 
 export default function AdminHome() {
   return (
     <AdminNavbar>
-      <Text>Admin Page</Text>
+      <Container>
+        <Card>
+          <CardBody>
+            <Text fontWeight={'bold'} fontSize={'2xl'}>Welcome to Admin Dashboard</Text>
+            <Divider my={6} />
+            <Text>Admin Page</Text>
+          </CardBody>
+        </Card>
+      </Container>
     </AdminNavbar>
   )
 }
